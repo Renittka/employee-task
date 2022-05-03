@@ -1,8 +1,11 @@
 package kz.dar.academy.backend.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import kz.dar.academy.backend.model.TaskRequest;
 import kz.dar.academy.backend.model.TaskResponse;
-import kz.dar.academy.backend.service.TaskService;
+import kz.dar.academy.backend.service.message.SendService;
+import kz.dar.academy.backend.service.task.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,9 +17,16 @@ public class TaskController {
     @Autowired
     private TaskService taskService;
 
+    @Autowired
+    private SendService sendService;
+
+    ObjectMapper objectMapper = new ObjectMapper();
+
     @PostMapping
-    public TaskResponse createTask(@RequestBody TaskRequest taskRequest) {
-        return taskService.createTask(taskRequest);
+    public TaskResponse createTask(@RequestBody TaskRequest taskRequest) throws JsonProcessingException {
+        TaskResponse taskResponse = taskService.createTask(taskRequest);
+        sendService.send(objectMapper.writeValueAsString(taskResponse));
+        return taskResponse;
     }
 
     @PutMapping

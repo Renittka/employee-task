@@ -1,9 +1,10 @@
-package kz.dar.academy.backend.service;
+package kz.dar.academy.backend.service.task;
 
 import kz.dar.academy.backend.model.TaskRequest;
 import kz.dar.academy.backend.model.TaskResponse;
 import kz.dar.academy.backend.repository.TaskEntity;
 import kz.dar.academy.backend.repository.TaskRepository;
+import kz.dar.academy.backend.service.task.TaskService;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,9 +41,13 @@ public class TaskServiceImpl implements TaskService {
         TaskEntity taskEntity = modelMapper.map(taskRequest, TaskEntity.class);
 
         TaskEntity dbEntity = taskRepository.getTaskEntityByTaskId(taskRequest.getTaskId());
+        dbEntity.setInitiatorId(taskRequest.getInitiatorId());
+        dbEntity.setExecutorId(taskRequest.getExecutorId());
+        dbEntity.setType(taskRequest.getType());
+        dbEntity.setDescription(taskRequest.getDescription());
         taskEntity.setTaskId(dbEntity.getTaskId());
 
-        taskEntity = taskRepository.save(taskEntity);
+        taskEntity = taskRepository.save(dbEntity);
 
         return modelMapper.map(taskEntity, TaskResponse.class);
     }

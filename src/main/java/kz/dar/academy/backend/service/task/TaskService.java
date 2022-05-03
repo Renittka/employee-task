@@ -1,4 +1,4 @@
-package kz.dar.academy.backend.service;
+package kz.dar.academy.backend.service.task;
 
 import kz.dar.academy.backend.model.TaskRequest;
 import kz.dar.academy.backend.model.TaskResponse;
